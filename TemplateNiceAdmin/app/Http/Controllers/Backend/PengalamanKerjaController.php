@@ -31,5 +31,31 @@ class PengalamanKerjaController extends Controller
         ->with('success','Data pengalaman_kerja baru telah berhasil disimpan.');
     }
 
+    public function edit($id)
+    {
+        $pengalaman_kerja = DB::table('pengalaman_kerja')->where('id',$id)->first();
+        return view('backend.pengalaman_kerja.create', compact('pengalaman_kerja'));
+    }
+
+    public function update(Request $request)
+    {
+        DB::table('pengalaman_kerja')->where('id',$request->id)->update([
+            'nama' => $request->nama,
+            'jabatan' => $request->jabatan,
+            'tahun_masuk' => $request->tahun_masuk,
+            'tahun_keluar' => $request->tahun_keluar
+        ]);
+
+        return redirect()->route('pengalaman_kerja.index')
+        ->with('success', 'Pengalaman Kerja Berhasil Diperbarui');
+    }
+
+    public function destroy($id)
+    {
+        DB::table('pengalaman_kerja')->where('id',$id)->delete();
+        return redirect()->route('pengalaman_kerja.index')
+        ->with('success', 'Data Pengalaman Kerja Berhasil Dihapus');
+    }
+
    
 }

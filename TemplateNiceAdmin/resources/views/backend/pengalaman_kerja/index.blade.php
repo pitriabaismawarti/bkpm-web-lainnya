@@ -60,7 +60,7 @@
                                             <form action="{{ route('pengalaman_kerja.destroy', $item->id) }}" method="POST" style="display:inline;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger" onclick="return confirm('Yakin ingin menghapus?')">
+                                                <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
                                                     <i class="fa fa-trash-o"></i>
                                                 </button>
                                             </form>
@@ -77,4 +77,4 @@
         </div>
     </section>
 </section>
-@endsection
+@endsection  
