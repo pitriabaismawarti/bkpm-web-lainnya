@@ -24,4 +24,23 @@ class PendidikanController extends Controller
         return redirect()->route('pendidikan.index')
         ->with('success','Data Pendidikan Baru Telah Berhasil Disimpan');
     }
+
+    public function edit(Pendidikan $pendidikan)
+    {
+        return view('backend.pendidikan.create', compact('pendidikan'));
+    }
+
+    public function update(Request $request, Pendidikan $pendidikan)
+    {
+        $pendidikan->update($request->all());
+        return redirect()->route('pendidikan.index')
+        ->with('success','Data Pendidikan Berhasil Diperbarui');
+    }
+
+    public function destroy(Pendidikan $pendidikan)
+    {
+        $pendidikan->delete();
+        return redirect()->route('pendidikan.index')
+        ->with('success','Data Pendidikan Berhasil Dihapus');
+    }
 }

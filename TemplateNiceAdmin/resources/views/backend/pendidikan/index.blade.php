@@ -72,14 +72,16 @@
                                     <td>{{ $item->tahun_keluar }}</td>
                                     <td>
                                         <div class="btn-group">
-                                        <a class="btn btn-warning" href="{{ route('pendidikan.edit', $item->id) }}">
-    <i class="fa fa-edit"></i>
-</a>
+                                            <!-- Tombol Edit -->
+                                            <a class="btn btn-warning" href="{{ route('pendidikan.edit', $item->id) }}">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
 
-                                            <form method="POST" action="">
+                                            <!-- Tombol Hapus dengan Konfirmasi -->
+                                            <form action="{{ route('pendidikan.destroy', $item->id) }}" method="POST" style="display: inline;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger">
+                                                <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
                                                     <i class="fa fa-trash-o"></i>
                                                 </button>
                                             </form>
