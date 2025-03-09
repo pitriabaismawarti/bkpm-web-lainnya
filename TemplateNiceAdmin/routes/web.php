@@ -2,9 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\HomeController;
-use App\Http\Middleware\CheckAge;
+use App\Http\Controllers\Backend\PengalamanKerjaController;
 
 Route::get('/', function () {
     return view('index');
@@ -13,7 +12,20 @@ Route::get('/', function () {
 // Route untuk dashboard
 Route::group(['namespace' => 'App\Http\Controllers\Backend'], function () {
     Route::resource('dashboard', 'DashboardController');
+    // Route::resource('pendidikan', 'PendidikanController');
+    Route::resource('pengalaman_kerja', 'PengalamanKerjaController');
 });
+// Route::get('/pengalaman-kerja', function () {
+//     return view('backend.pengalaman_kerja.index');
+// })->name('pengalaman_kerja.index');
+
+// Route::get('/pengalaman-kerja/create', function () {
+//     return view('backend.pengalaman_kerja.create');
+// })->name('pengalaman_kerja.create');
+
+Route::get('/pengalaman_kerja', [PengalamanKerjaController::class, 'index'])->name('pengalaman_kerja.index');
+Route::get('/pengalaman_kerja/create', [PengalamanKerjaController::class, 'create'])->name('pengalaman_kerja.create');
+
 
 // Route untuk autentikasi Laravel
 Auth::routes();
@@ -26,14 +38,3 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::middleware('guest')->group(function () {
-    Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
-    Route::post('login', [LoginController::class, 'login']);
-});
-
-Route::post('logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
-
-// Route::middleware('guest')->group(function () {
-//     Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-//     Route::post('register', [RegisterController::class, 'register']);
-// });
