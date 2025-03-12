@@ -7,6 +7,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Backend\PengalamanKerjaController;
 use App\Http\Controllers\Backend\PendidikanController;
 use App\Http\Controllers\SessionController;
+use App\Http\Controllers\CobaController;
 
 Route::get('/', function () {
     return view('index');
@@ -52,3 +53,7 @@ Route::get('/session', [SessionController::class, 'delete']);
 Route::get('/pegawai/{nama}', [PegawaiController::class, 'index']);
 Route::get('/formulir', [PegawaiController::class, 'formulir']);
 Route::post('/formulir/proses', [PegawaiController::class, 'proses']);
+
+// Acara 18
+Route::get('/cobaerror', [CobaController::class, 'index']);
+Route::get('/cobaerror/{nama}', [CobaController::class, 'index']);
