@@ -8,6 +8,7 @@ use App\Http\Controllers\Backend\PengalamanKerjaController;
 use App\Http\Controllers\Backend\PendidikanController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\CobaController;
+use App\Http\Controllers\UploadController;
 
 Route::get('/', function () {
     return view('index');
@@ -57,3 +58,8 @@ Route::post('/formulir/proses', [PegawaiController::class, 'proses']);
 // Acara 18
 Route::get('/cobaerror', [CobaController::class, 'index']);
 Route::get('/cobaerror/{nama}', [CobaController::class, 'index']);
+
+// Acara 19
+Route::get('/upload', [UploadController::class, 'upload'])->name('upload');
+Route::post('/upload/proses', [UploadController::class, 'proses_upload'])->name('upload.proses');
+// Route::post('/upload/resize', [UploadController::class, 'resize_upload'])->name('upload_resize');
