@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\PegawaiController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Backend\PengalamanKerjaController;
 use App\Http\Controllers\Backend\PendidikanController;
+use App\Http\Controllers\SessionController;
 
 Route::get('/', function () {
     return view('index');
@@ -43,3 +45,10 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
+//Acara 17
+Route::get('/session', [SessionController::class, 'create']);
+Route::get('/session', [SessionController::class, 'show']);
+Route::get('/session', [SessionController::class, 'delete']);
+Route::get('/pegawai/{nama}', [PegawaiController::class, 'index']);
+Route::get('/formulir', [PegawaiController::class, 'formulir']);
+Route::post('/formulir/proses', [PegawaiController::class, 'proses']);

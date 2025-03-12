@@ -67,6 +67,8 @@
         <div class="col-lg-8">
           <div class="row">
 
+          
+
             <!-- Sales Card -->
             @yield('sales-card')
             <!-- End Sales Card -->
