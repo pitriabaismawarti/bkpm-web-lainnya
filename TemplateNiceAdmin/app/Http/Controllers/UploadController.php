@@ -79,5 +79,44 @@ class UploadController extends Controller
     }
 }
 
+// acara 20
+public function dropzone()
+{
+    return view('dropzone');
+}
+
+public function dropzone_store(Request $request)
+{
+    $image = $request->file('file');
+    $imageName = time().'.'.$image->extension();
+    $image->move(public_path('img/dropzone'), $imageName);
+    return response()->json(['success'=> $imageName]);
+}
+
+public function pdf_upload()
+{
+    return view('pdf_upload');
+
+}
+
+public function pdf_store(Request $request)
+{
+    $pdf = $request->file('file');
+
+    if ($pdf) {
+        // Tentukan nama file
+        $pdfName = 'pdf_' . time() . '.' . $pdf->extension();
+
+        // Pindahkan ke folder public/pdf/dropzone
+        $pdf->move(public_path('pdf/dropzone'), $pdfName);
+
+        return response()->json(['success' => 'File berhasil diunggah!', 'file_name' => $pdfName]);
+    }
+
+    return response()->json(['error' => 'Gagal mengunggah file'], 400);
+}
+
+// End acara 20
+
 
 }
