@@ -1,12 +1,22 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use File;
-use Image;
+use Illuminate\Support\Facades\File;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class UploadController extends Controller
 {
+    protected $imageManager;
+
+    public function __construct()
+    {
+        // Gunakan driver GD untuk ImageManager
+        $this->imageManager = new ImageManager(new Driver());
+    }
+
     public function upload()
     {
         return view('upload');
@@ -14,70 +24,60 @@ class UploadController extends Controller
 
     public function proses_upload(Request $request)
     {
-        // Validasi input
         $request->validate([
             'file' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'keterangan' => 'required',
         ]);
 
-        // Ambil file yang diupload
         $file = $request->file('file');
+        $tujuan_upload = public_path('data_file');
 
-        // Menampilkan informasi file
-        echo 'File Name: ' . $file->getClientOriginalName() . '<br>';
-        echo 'File Extension: ' . $file->getClientOriginalExtension() . '<br>';
-        echo 'File Real Path: ' . $file->getRealPath() . '<br>';
-        echo 'File Size: ' . $file->getSize() . ' bytes<br>';
-        echo 'File Mime Type: ' . $file->getMimeType() . '<br>';
+        // Pastikan folder ada
+        if (!File::exists($tujuan_upload)) {
+            File::makeDirectory($tujuan_upload, 0777, true, true);
+        }
 
-        // Tentukan folder tujuan upload
-        $tujuan_upload = 'data_file';
+        // Simpan file asli
+        $file->move($tujuan_upload, $file->getClientOriginalName());
 
-        // Pindahkan file ke folder tujuan
-        $file->move(public_path($tujuan_upload), $file->getClientOriginalName());
-
-        return "File berhasil diupload ke folder: " . $tujuan_upload;
+        return redirect()->route('upload')->with('success', 'File berhasil diupload!');
     }
 
-    // public function resize_upload(Request $request)
-    // {
-    //     $this->validate($request, [
-    //         'file' => 'required',
-    //         'keterangan' => 'required',
-    //     ]);
-    
-    //     // TENTUKAN PATH LOKASI UPLOAD
-    //     $path = public_path('img/logo');
-    
-    //     // JIKA FOLDERNYA BELUM ADA
-    //     if (!file_exists($path)) {
-    //         // MAKA FOLDER TERSEBUT AKAN DIBUAT
-    //         File::makeDirectory($path, 0777, true);
-    //     }
-    
-    //     // MENGAMBIL FILE IMAGE DARI FORM
-    //     $file = $request->file('file');
-    
-    //     // MEMBUAT NAMA FILE DARI GABUNGAN TANGGAL DAN UNIQID()
-    //     $fileName = 'logo_' . uniqid() . '.' . $file->getClientOriginalExtension();
-    
-    //     // MEMBUAT CANVAS IMAGE SEBESAR DIMENSI
-    //     $canvas = Image::canvas(200, 200);
-    
-    //     // RESIZE IMAGE SESUAI DIMENSI DENGAN MEMPERTAHANKAN RATIO
-    //     $resizeImage = Image::make($file)->resize(null, 200, function($constraint) {
-    //         $constraint->aspectRatio();
-    //     });
-    
-    //     // MEMASUKKAN IMAGE YANG TELAH DIRESIZE KE DALAM CANVAS
-    //     $canvas->insert($resizeImage, 'center');
-    
-    //     // SIMPAN IMAGE KE FOLDER
-    //     if ($canvas->save($path . '/' . $fileName)) {
-    //         return redirect(route('upload'))->with('success', 'Data berhasil ditambahkan!');
-    //     } else {
-    //         return redirect(route('upload'))->with('error', 'Data gagal ditambahkan!');
-    //     }
-    // }
-    
+    public function resize_upload(Request $request)
+{
+    $request->validate([
+        'file' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+        'keterangan' => 'required',
+    ]);
+
+    try {
+        $path = public_path('img/logo');
+
+        if (!File::exists($path)) {
+            File::makeDirectory($path, 0777, true, true);
+        }
+
+        $file = $request->file('file');
+        $fileName = 'logo_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+        // Resize gambar menggunakan ImageManager
+        $image = $this->imageManager->read($file)->resize(200, 200);
+
+        // Simpan gambar ke format PNG atau JPEG (sesuai format asli file)
+        if ($file->getClientOriginalExtension() === 'png') {
+            $image = $image->toPng();
+        } else {
+            $image = $image->toJpeg(90); // 90 = kualitas gambar
+        }
+
+        // Simpan file ke lokasi tujuan
+        file_put_contents($path . '/' . $fileName, $image);
+
+        return redirect()->route('upload')->with('success', 'Gambar berhasil diresize & diupload!');
+    } catch (\Exception $e) {
+        return redirect()->route('upload')->with('error', 'Gagal mengupload gambar! Error: ' . $e->getMessage());
+    }
+}
+
+
 }

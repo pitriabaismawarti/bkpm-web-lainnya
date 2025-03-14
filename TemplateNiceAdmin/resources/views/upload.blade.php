@@ -8,10 +8,23 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-8 mx-auto my-5">
-            <h2 class="text-center my-5">Upload File Dengan Laravel</h2>
+            <h2>Upload File Dengan Laravel</h2>
 
-            {{-- Menampilkan error jika ada --}}
-            @if (count($errors) > 0)
+            @if (session('success'))
+                <div class="alert alert-success alert-dismissible">
+                    <a href="#" class="close text-decoration-none" data-dismiss="alert" aria-label="close">&times;</a>
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="alert alert-danger alert-dismissible">
+                    <a href="#" class="close text-decoration-none" data-dismiss="alert" aria-label="close">&times;</a>
+                    {{ session('error') }}
+                </div>
+            @endif
+
+            @if ($errors->any())
                 <div class="alert alert-danger">
                     @foreach ($errors->all() as $error)
                         <p>{{ $error }}</p>
@@ -19,8 +32,7 @@
                 </div>
             @endif
 
-            {{-- Form Upload --}}
-            <form action="{{ route('upload.proses') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('upload_resize') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group">
                     <label>File Gambar</label>
@@ -32,10 +44,20 @@
                     <textarea name="keterangan" class="form-control"></textarea>
                 </div>
 
-                <input type="submit" value="Upload" class="btn btn-primary">
+                <input type="submit" class="btn btn-primary" value="Upload & Resize">
             </form>
         </div>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $(".alert-dismissible .close").click(function(){
+            $(this).parent().fadeOut();
+        });
+    });
+</script>
+
 </body>
 </html>
