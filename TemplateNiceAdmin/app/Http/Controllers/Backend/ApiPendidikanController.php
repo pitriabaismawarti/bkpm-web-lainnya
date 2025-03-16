@@ -28,4 +28,35 @@ class ApiPendidikanController extends Controller
 
         return response()->json($pendidikan, 200);
     }
+    public function createPen(Request $request)
+    {
+        
+        $pendidikan = Pendidikan::create($request->all());
+
+        return response()->json([
+            'status' => 'ok',
+            'message' => 'Pendidikan berhasil ditambahkan!',
+            'data' => $pendidikan
+        ], 201);
+    }
+
+    public function updatePen($id, Request $request)
+    {
+        Pendidikan::find($id)->update($request->all());
+
+        return response()->json([
+            'status' => 'ok',
+            'message' => 'Pendidikan berhasil dirubah!'
+        ], 201);
+    }
+
+    public function deletePen($id)
+    {
+        Pendidikan::destroy($id);
+
+        return response()->json([
+            'status' => 'ok',
+            'message' => 'Pendidikan berhasil dihapus!'
+        ], 201);
+    }
 }
