@@ -87,6 +87,8 @@ Route::middleware([CorsMiddleware::class])->group(function () {
 Route::group(['prefix' => 'api'], function () {
     Route::get('api_pendidikan', [ApiPendidikanController::class, 'getAll']);
     Route::get('api_pendidikan/{id}', [ApiPendidikanController::class, 'getPen']);
+    
+    // Acara 22
     Route::post('api_pendidikan', [ApiPendidikanController::class, 'createPen']);
     Route::put('api_pendidikan/{id}', [ApiPendidikanController::class, 'updatePen']);
     Route::delete('api_pendidikan/{id}', [ApiPendidikanController::class, 'deletePen']);
